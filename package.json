@@ -1,0 +1,16 @@
+{
+  "name": "pico-scratch",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-pico": "^1.2.0",
+    "subcollider": "^0.1.1",
+    "timbre": "^14.6.23"
+  }
+}
