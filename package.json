@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "midi": "^0.9.0",
     "node-pico": "^1.2.0",
     "subcollider": "^0.1.1",
     "timbre": "^14.6.23"

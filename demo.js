@@ -1,24 +1,10 @@
-// var pico = require('node-pico');
-//
-// // Generate sinetone
-//
-// function sinetone(freq) {
-// 	var phase = 0,
-// 		phaseStep = freq / pico.samplerate;
-// 	return {
-// 		process: function(L, R) {
-// 			for (var i = 0; i < L.length; i++) {
-// 				L[i] = R[i] = Math.sin(6.28318 * phase) * 0.25;
-// 				phase += phaseStep;
-// 			}
-// 		}
-// 	};
-// }
-// pico.play(sinetone(440));
-
 var T = require('timbre');
 var sc = require('subcollider');
 require('./MoogFF');
+var midi = require('midi');
+
+var input = new midi.input();
+input.openPort(0);
 
 T("audio").load("drumkit.wav", function() {
   var BD  = this.slice(   0,  500).set({bang:false});
@@ -53,6 +39,14 @@ T("audio").load("drumkit.wav", function() {
     T("pan", {pos:T("tri", {freq:"BPM64 L1", mul:0.8}).kr()}, arp)
   ).play();
 
+	input.on('message', function(deltaTime, message) {
+		var noteNum = message[1];
+		if (message[2] == 0) return;
+		lead.freq.linTo(noteNum.midicps(), "100ms");
+		arp.noteOn(noteNum + 24, 60);
+		console.log("m: " + message);
+	});
+
   T("interval", {interval:"BPM128 L16"}, function(count) {
     var i = count % P1.length;
     if (i === 0) CYM.bang();
@@ -65,10 +59,10 @@ T("audio").load("drumkit.wav", function() {
       P2.wrapSwap(i, j);
     }
 
-    var noteNum = scale.wrapAt(P2.wrapAt(count)) + 60;
-    if (i % 2 === 0) {
-      lead.freq.linTo(noteNum.midicps() * 2, "100ms");
-    }
-    arp.noteOn(noteNum + 24, 60);
+    // var noteNum = scale.wrapAt(P2.wrapAt(count)) + 60;
+    // if (i % 2 === 0) {
+    //   lead.freq.linTo(noteNum.midicps() * 2, "100ms");
+    // }
+    // arp.noteOn(noteNum + 24, 60);
   }).start();
 });
