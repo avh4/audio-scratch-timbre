@@ -10,7 +10,8 @@ synth.def = function(opts) {
   var osc1, osc2, env;
   osc1 = T("saw", {freq:opts.freq         , mul:0.25});
   osc2 = T("saw", {freq:opts.freq * 1.0045, mul:0.20});
-  env  = T("adsr", {a:100,d:250,s:0.6,r:500}, osc1, osc2);
+	var bpf = T("bpf", {freq: 660, Q: 3}, osc1, osc2);
+  env  = T("adsr", {a:100,d:250,s:0.6,r:500}, bpf);
   return env.on("ended", opts.doneAction).bang();
 };
 
